@@ -16,6 +16,7 @@ export const Results = ({ query }) => {
                     return response.json();
                 })
                 .then((parsedData) => {
+                    console.log(parsedData)
                     setCoords([0, 0])
                     setResults(parsedData);
                 })
