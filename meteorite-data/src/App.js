@@ -3,16 +3,19 @@ import { useState } from "react"
 import { Headers } from "./components/Headers";
 import { Searchbar } from "./components/Searchbar";
 import { Results } from "./components/Results";
+import  "./App.css"
 
 function App() {
 
   const [query, setQuery] = useState("");
-  console.log(query)
+  
   return (
     <div>
       <Headers />
+      <div className='mainBox'>
       <Searchbar setQuery={setQuery} />
-      <Results query={query} />
+      <Results className='mapBox' query={query} />
+      </div>
     </div>
   );
 };

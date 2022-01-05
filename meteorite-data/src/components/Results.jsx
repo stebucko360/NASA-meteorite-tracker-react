@@ -1,57 +1,69 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMap, Popup, useMapEvents } from 'react-leaflet'
 
 export const Results = ({ query }) => {
 
     const [results, setResults] = useState([]);
+    const [coords, setCoords] = useState([0, 40]);
+
+    const notInitialRender = useRef(false)
 
     useEffect(() => {
-        if (query !== '') fetch(`https://data.nasa.gov/resource/gh4g-9sfh.json?$where=name%20like%20%27%25${query}%25%27`)
-            .then((response) => {
-                return response.json();
-            })
-            .then((parsedData) => {
-                setResults(parsedData);
-            })
+        if (notInitialRender.current) {
+            fetch(`https://data.nasa.gov/resource/gh4g-9sfh.json?$where=name%20like%20%27%25${query}%25%27`)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((parsedData) => {
+                    setCoords([0, 0])
+                    setResults(parsedData);
+                })
+        } else {
+            notInitialRender.current = true
+        }
     }, [query]);
 
-    function ChangeMapView({ coords }) {
+    function ChangeMapView({coordinates}) {
+        
         const map = useMap();
-        map.setView(coords, map.getZoom());
+        if (coords[0] !== 0 ) {
+            map.setZoom(8)
+        } 
+        if (coords[0] === 0 ){
+            map.setZoom(3)
+        }
+        map.setView(coordinates, map.getZoom());
         return null;
     };
-
+    
     return (
         <div>
-            {!results[0]
-                ? null
-                :
-                <>
-
-                    {/* <ul>
-                    <li>{results[0].name}</li>
-                    <li>{results[0].mass}</li>
-                    <li>{results[0].id}</li>
-                </ul> */}
-                    <MapContainer
-                        style={{ height: "500px", width: "500px" }}
-                        center={[51.505, -0.09]}
-                        zoom={2}
-                        scrollWheelZoom={false}>
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            
+            <MapContainer
+                className='map'
+                center={[0, 0]}
+                 zoom={3}
+                scrollWheelZoom={true}>
+                 <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                         {results.map(result => {
                             if (result.geolocation) return <Marker
+                                eventHandlers={{ click: ()=>{setCoords([result.geolocation.latitude, result.geolocation.longitude])}}}
                                 position={[result.geolocation.latitude, result.geolocation.longitude]}>
+                                    <Popup >
+                                        Name : {result.name} <br/>
+                                        ID : {result.id} <br/>
+                                        Mass : {result.mass} <br/>
+                                        Year: { result.year && result.year.slice(0, 4)}
+                                    </Popup>
                             </Marker>
                         })
                         }
-                        <ChangeMapView coords={[results[0].geolocation.latitude, results[0].geolocation.longitude]} />
-                    </MapContainer>
-                </>
-            }
+                        <ChangeMapView coordinates={coords} />
+             </MapContainer>             
         </div>
     )
 }
+

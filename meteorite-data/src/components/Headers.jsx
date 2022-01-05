@@ -1,9 +1,11 @@
 import React from 'react'
+import logo from '../images/nasa.jpg'
 
 export const Headers = () => {
     return (
-        <div>
-            <h1>Meteorite data</h1>
+        <div className='mainBar'>
+            <img id='logo' src={logo} alt='nasalogo'></img>
+            <h1>NASA Meteorite Data</h1>
         </div>
     )
 }

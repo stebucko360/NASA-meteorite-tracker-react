@@ -1,4 +1,39 @@
-.Map {
-    width: 500px;
-    height: 500px;
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 0%;
+}
+
+.searchLabel {
+    color: white;
+}
+
+.mainBar {
+    display: flex;
+}
+
+h1 {
+    font-size: 50px;
+}
+#logo {
+    width: 145px;
+}
+
+.mainBox {
+    display: flex;
+    flex-direction: row;
+}
+
+.sideBar {
+    height: 80vh;
+    background-color: black;
+}
+
+.search {
+    padding-top: 25px;
+    margin: 10px;
+}
+
+.map {
+    width: 90vw;
+    height: 80vh;
 }

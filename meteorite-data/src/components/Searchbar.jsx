@@ -17,9 +17,11 @@ export const Searchbar = ({setQuery}) => {
 
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div className='sideBar'>
+            <form className='search' onSubmit={handleSubmit}>
+                <label className='searchLabel' for='searchbox'>Search by meteorite name :</label>
                 <input
+                id="searchbox"
                 className="input"
                 value={search}
                 onChange={handleChange}>
